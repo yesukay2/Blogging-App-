@@ -18,6 +18,7 @@ export class AuthService {
   }
 
   authenticateUser(email: string, password: string): boolean {
+    console.log(email, password);
     if (email === 'admin' && password === 'admin') {
       localStorage.setItem(TOKEN_KEY, 'mock-jwt-token-yesu');
       return true;

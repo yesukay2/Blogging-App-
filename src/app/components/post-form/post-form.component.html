@@ -1,5 +1,18 @@
 <form class="post-form" [formGroup]="postForm" (ngSubmit)="createPost()">
   <input formControlName="title" type="text" placeholder="title" />
+  <div class="error-msg" *ngIf="postForm.get('title')?.errors?.['profanity']">
+    Profane words are not allowed
+  </div>
+  <div class="error-msg" *ngIf="postForm.get('title')?.errors?.['specialChar']">
+    Special characters are not allowed
+  </div>
+
   <input formControlName="body" type="text" placeholder="body" />
+  <div class="error-msg" *ngIf="postForm.get('body')?.errors?.['profanity']">
+    Profane words are not allowed
+  </div>
+  <div class="error-msg" *ngIf="postForm.get('body')?.errors?.['specialChar']">
+    Special characters are not allowed
+  </div>
   <button type="submit">Create Post</button>
 </form>

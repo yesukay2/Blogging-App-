@@ -1,1 +1,7 @@
-<p>login works!</p>
+<section class="login-form">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <input formControlName="username" type="text" placeholder="username" />
+    <input formControlName="password" type="password" placeholder="password" />
+    <button type="submit">Login</button>
+  </form>
+</section>
