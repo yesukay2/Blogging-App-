@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
+import { EditPostComponent } from '../../components/edit-post/edit-post.component';
 
 @Component({
   selector: 'app-edit-post-page',
-  imports: [],
+  imports: [EditPostComponent],
   templateUrl: './edit-post-page.component.html',
-  styleUrl: './edit-post-page.component.scss'
+  styleUrl: './edit-post-page.component.scss',
 })
-export class EditPostPageComponent {
-
-}
+export class EditPostPageComponent {}
