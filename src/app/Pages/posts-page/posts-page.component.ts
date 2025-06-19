@@ -5,6 +5,8 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
 import { CommonModule } from '@angular/common';
 import { ErrorHandlerService } from '../../Services/error-handler.service';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-posts-page',
@@ -20,7 +22,9 @@ export class PostsPageComponent implements OnInit {
 
   constructor(
     private postsService: PostsService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.fetchPosts(this.currentPage);
   }
@@ -37,5 +41,9 @@ export class PostsPageComponent implements OnInit {
     this.postsService.getPaginatedPosts(page, this.itemsPerPage).subscribe({
       error: (error) => this.errorHandler.handleError(error),
     });
+  }
+
+  addPost() {
+    this.router.navigate(['posts/new-post']);
   }
 }

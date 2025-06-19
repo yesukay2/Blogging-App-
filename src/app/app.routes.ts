@@ -16,11 +16,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   { path: 'posts/:id', component: PostDetailsPageComponent },
+  { path: 'posts/:id/delete', component: DeleteModalComponent },
   {
     path: 'posts/edit-post/:id',
     component: NewPostPageComponent,
     canActivate: [authGuard],
   },
   { path: 'register', component: RegisterPageComponent },
-  { path: 'posts/:id/delete', component: DeleteModalComponent },
 ];

@@ -4,6 +4,11 @@
     <p class="subtitle">
       Browse through our collection of articles and stories
     </p>
+    <div class="new-post-btn-container">
+      <button (click)="addPost()" class="add-post-button">
+        <span>Add Post</span>
+      </button>
+    </div>
   </div>
   <div *ngIf="posts.length > 0" class="pagination-container">
     <app-pagination

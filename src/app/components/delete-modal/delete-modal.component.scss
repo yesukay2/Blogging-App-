@@ -1,0 +1,149 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  animation: fadeIn $transition-speed ease-out;
+}
+
+.modal-content {
+  @include form-container;
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: $shadow-xl;
+  animation: slideIn $transition-speed ease-out;
+
+  .close-button {
+    position: absolute;
+    top: $space-3;
+    right: $space-3;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: $space-1;
+    color: $text-light;
+    transition: color $transition-speed ease;
+    @include flex-center;
+
+    &:hover {
+      color: $text;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.modal-header {
+  padding: $space-4 $space-6 0;
+  text-align: center;
+
+  h2 {
+    @include form-title;
+    margin-bottom: $space-2;
+  }
+}
+
+.modal-body {
+  padding: $space-4 $space-6;
+  text-align: center;
+  @include flex-center;
+  flex-direction: column;
+
+  .warning-icon {
+    color: $error;
+    margin-bottom: $space-3;
+    width: 48px;
+    height: 48px;
+  }
+
+  p {
+    color: $text;
+    font-size: $text-base;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.modal-footer {
+  @include d-flex(row, flex-end, center);
+  gap: $space-3;
+  padding: $space-4 $space-6 $space-6;
+
+  button {
+    @include button-style;
+    min-width: 80px;
+    padding: $space-2 $space-4;
+    font-size: $text-sm;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: normal;
+
+    &.cancel-button {
+      background-color: white;
+      color: $text;
+      border: 1px solid $border;
+
+      &:hover {
+        background-color: $background;
+        border-color: $primary;
+        color: $primary;
+      }
+    }
+
+    &.confirm-button {
+      background-color: $error;
+
+      &:hover {
+        background-color: darken($error, 10%);
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@include responsive(sm) {
+  .modal-content {
+    width: 85%;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .modal-footer {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
