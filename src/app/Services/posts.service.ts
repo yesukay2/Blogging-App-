@@ -14,6 +14,8 @@ import { Comment } from '../Utils/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from './error-handler.service';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -39,13 +41,15 @@ export class PostsService {
   >();
   private cacheDuration = 1000 * 60 * 5;
 
-  baseUrl = 'https://jsonplaceholder.typicode.com';
+  baseUrl = environment.baseUrl;
 
   constructor(
     private http: HttpClient,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandlerService
-  ) {}
+  ) {
+    this.loadCacheFromLocalStorage();
+  }
 
   getPost(id: number): Observable<Post> {
     const post = this.cachedPost.get(id.toString());
@@ -54,6 +58,7 @@ export class PostsService {
     }
     return this.http.get<Post>(`${this.baseUrl}/posts/${id}`).pipe(
       tap((post) => {
+        this.posts$.next([post]);
         this.cachedPost.set(id.toString(), {
           ...post,
           timestamp: Date.now(),
@@ -67,33 +72,44 @@ export class PostsService {
     );
   }
 
-  getPaginatedPosts(page: number, limit: number) {
+  getPaginatedPosts(page: number, limit: number): Observable<Post[]> {
+    const key = `${page}-${limit}`;
+    const cached = this.cachedPaginatedPosts.get(key);
+
+    // Always emit from cache immediately if exists
+    if (cached) {
+      this.posts$.next(cached.data);
+
+      // Refresh cache if stale
+      if (Date.now() - cached.timestamp < this.cacheDuration) {
+        return of(cached.data);
+      }
+    }
+
+    // Otherwise fetch and update
     const params = {
       _page: page.toString(),
       _limit: limit.toString(),
     };
-    const cachedPosts = this.cachedPaginatedPosts.get(`${page}-${limit}`);
-    if (
-      cachedPosts &&
-      Date.now() - cachedPosts.timestamp < this.cacheDuration
-    ) {
-      return of(cachedPosts.data);
-    } else {
-      return this.http.get<Post[]>(`${this.baseUrl}/posts`, { params }).pipe(
-        tap((posts) => {
-          this.cachedPaginatedPosts.set(`${page}-${limit}`, {
-            data: posts,
-            timestamp: Date.now(),
-          });
-        }),
-        retry(3),
-        catchError((error) => {
-          this.errorHandler.handleError(error);
-          return throwError(() => error);
-        })
-      );
-    }
+
+    return this.http.get<Post[]>(`${this.baseUrl}/posts`, { params }).pipe(
+      tap((posts) => {
+        this.cachedPaginatedPosts.set(key, {
+          data: posts,
+          timestamp: Date.now(),
+        });
+        this.saveCacheToLocalStorage();
+        this.posts$.next(posts);
+      }),
+
+      retry(3),
+      catchError((error) => {
+        this.errorHandler.handleError(error);
+        return throwError(() => error);
+      })
+    );
   }
+
   getComments(): Observable<Comment[]> {
     const cacheComments = this.cacheComments.get('comments');
     if (
@@ -125,6 +141,7 @@ export class PostsService {
     ) {
       return of(postComments.data);
     }
+
     return this.http
       .get<Comment[]>(`${this.baseUrl}/posts/${id}/comments`)
       .pipe(
@@ -143,6 +160,20 @@ export class PostsService {
   }
 
   createPost(post: Post): Observable<Post> {
+    // Simulate ID if not present
+    if (!post.id) post.id = Date.now();
+
+    const key = '1-10';
+    const cached = this.cachedPaginatedPosts.get(key);
+    const newPageData = cached ? [post, ...cached.data].slice(0, 10) : [post];
+
+    this.cachedPaginatedPosts.set(key, {
+      data: newPageData,
+      timestamp: Date.now(),
+    });
+    this.saveCacheToLocalStorage();
+    this.posts$.next(newPageData);
+
     return this.http.post<Post>(`${this.baseUrl}/posts`, post).pipe(
       retry(3),
       catchError((error) => {
@@ -153,6 +184,23 @@ export class PostsService {
   }
 
   updatePost(post: Post, id: number): Observable<Post> {
+    this.cachedPaginatedPosts.forEach((value, key) => {
+      const updatedPage = value.data.map((_post) =>
+        _post.id === id ? post : _post
+      );
+      this.cachedPaginatedPosts.set(key, {
+        data: updatedPage,
+        timestamp: Date.now(),
+      });
+
+      // Also update the observable if this page is visible
+      if (
+        JSON.stringify(this.posts$.getValue()) === JSON.stringify(value.data)
+      ) {
+        this.posts$.next(updatedPage);
+      }
+    });
+
     return this.http.put<Post>(`${this.baseUrl}/posts/${id}`, post).pipe(
       retry(3),
       catchError((error) => {
@@ -163,6 +211,20 @@ export class PostsService {
   }
 
   deletePost(id: number): Observable<any> {
+    this.cachedPaginatedPosts.forEach((value, key) => {
+      const updatedPage = value.data.filter((post) => post.id !== id);
+      this.cachedPaginatedPosts.set(key, {
+        data: updatedPage,
+        timestamp: Date.now(),
+      });
+
+      if (
+        JSON.stringify(this.posts$.getValue()) === JSON.stringify(value.data)
+      ) {
+        this.posts$.next(updatedPage);
+      }
+    });
+
     return this.http.delete(`${this.baseUrl}/posts/${id}`).pipe(
       retry(3),
       catchError((error) => {
@@ -177,5 +239,23 @@ export class PostsService {
     this.cacheComments.clear();
     this.cachedPost.clear();
     this.cachePostComments.clear();
+  }
+
+  private saveCacheToLocalStorage(): void {
+    const serialized = Array.from(this.cachedPaginatedPosts.entries());
+    localStorage.setItem('cachedPosts', JSON.stringify(serialized));
+  }
+
+  private loadCacheFromLocalStorage(): void {
+    const data = localStorage.getItem('cachedPosts');
+    if (data) {
+      try {
+        const parsed: [string, { data: Post[]; timestamp: number }][] =
+          JSON.parse(data);
+        this.cachedPaginatedPosts = new Map(parsed);
+      } catch (e) {
+        console.error('Failed to load cached posts from localStorage', e);
+      }
+    }
   }
 }

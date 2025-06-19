@@ -11,7 +11,8 @@ import {
   profaneValidator,
   specialCharValidator,
 } from '../../Utils/custom_validators';
-import { Sanitizer, SecurityContext } from '@angular/core';
+import { SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -23,7 +24,7 @@ import { CommonModule } from '@angular/common';
 export class PostFormComponent {
   constructor(
     private postsService: PostsService,
-    private sanitizer: Sanitizer
+    private sanitizer: DomSanitizer
   ) {}
 
   postForm = new FormGroup({

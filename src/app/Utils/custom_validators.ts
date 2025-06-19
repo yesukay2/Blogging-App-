@@ -3,6 +3,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 const forbiddenWords = ['nigger', 'nigga', 'shit', 'pussy', 'ass'];
 export function profaneValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
     const checkForbiddenWords = forbiddenWords.some((word) =>
       control.value.toLowerCase().includes(word)
     );
@@ -46,6 +47,7 @@ const specialChars = [
 ];
 export function specialCharValidator() {
   return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null;
     const checkForbiddenChars = specialChars.some((char) =>
       control.value.toLowerCase().includes(char)
     );

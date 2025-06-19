@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PostsService } from '../../Services/posts.service';
 import { Post } from '../../Utils/interfaces';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
@@ -12,7 +12,7 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
   templateUrl: './posts-page.component.html',
   styleUrl: './posts-page.component.scss',
 })
-export class PostsPageComponent {
+export class PostsPageComponent implements OnInit {
   posts: Post[] = [];
   currentPage = 1;
   itemsPerPage = 10;
@@ -24,10 +24,16 @@ export class PostsPageComponent {
     this.fetchPosts(this.currentPage);
   }
 
+  ngOnInit(): void {
+    this.postsService.posts.subscribe({
+      next: (posts) => (this.posts = posts),
+    });
+    this.fetchPosts(this.currentPage);
+  }
+
   fetchPosts(page: number) {
     this.currentPage = page;
     this.postsService.getPaginatedPosts(page, this.itemsPerPage).subscribe({
-      next: (posts) => (this.posts = posts),
       error: (error) => this.errorHandler.handleError(error),
     });
   }
