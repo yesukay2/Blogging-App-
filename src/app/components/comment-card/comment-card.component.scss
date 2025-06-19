@@ -1,0 +1,63 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.comment-card {
+  background: white;
+  border-radius: $rounded-lg;
+  padding: $space-4;
+  margin-bottom: $space-4;
+  border: 1px solid $border;
+  box-shadow: $shadow-sm;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow;
+  }
+
+  .comment-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: $space-2 $space-3;
+    margin-bottom: $space-3;
+    padding-bottom: $space-3;
+    border-bottom: 1px solid $border;
+
+    .comment-author {
+      font-weight: 600;
+      color: $text;
+      font-size: $text-base;
+      display: flex;
+      align-items: center;
+      gap: $space-2;
+    }
+
+    .comment-email {
+      font-size: $text-sm;
+      color: $text-light;
+      word-break: break-all;
+
+      &::before {
+        content: "•";
+        margin-right: $space-2;
+        color: $border;
+      }
+    }
+  }
+
+  .comment-body {
+    color: $text;
+    line-height: 1.6;
+    font-size: $text-base;
+    white-space: pre-line;
+  }
+
+  @include responsive(sm) {
+    padding: $space-5;
+
+    .comment-header {
+      flex-wrap: nowrap;
+    }
+  }
+}

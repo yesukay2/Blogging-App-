@@ -4,8 +4,8 @@ import { RegisterPageComponent } from './Pages/register-page/register-page.compo
 import { PostsPageComponent } from './Pages/posts-page/posts-page.component';
 import { PostDetailsPageComponent } from './Pages/post-details-page/post-details-page.component';
 import { NewPostPageComponent } from './Pages/new-post-page/new-post-page.component';
-import { EditPostPageComponent } from './Pages/edit-post-page/edit-post-page.component';
 import { authGuard } from './Guards/auth.guard';
+import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 
 export const routes: Routes = [
   { path: '', component: LoginPageComponent },
@@ -18,8 +18,9 @@ export const routes: Routes = [
   { path: 'posts/:id', component: PostDetailsPageComponent },
   {
     path: 'posts/edit-post/:id',
-    component: EditPostPageComponent,
+    component: NewPostPageComponent,
     canActivate: [authGuard],
   },
   { path: 'register', component: RegisterPageComponent },
+  { path: 'posts/:id/delete', component: DeleteModalComponent },
 ];

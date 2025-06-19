@@ -16,6 +16,7 @@ export class PostsPageComponent implements OnInit {
   posts: Post[] = [];
   currentPage = 1;
   itemsPerPage = 10;
+  totalItems = 100;
 
   constructor(
     private postsService: PostsService,

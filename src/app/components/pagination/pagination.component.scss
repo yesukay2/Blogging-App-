@@ -1,0 +1,83 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $space-1;
+  margin: $space-6 0;
+  padding: 0 $space-2;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  button {
+    @include flex-center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 $space-2;
+    border-radius: $rounded;
+    border: 1px solid $border;
+    background-color: white;
+    color: $text;
+    font-size: $text-xs;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0; // Prevent buttons from shrinking
+
+    &:hover:not(:disabled) {
+      background-color: $background;
+      border-color: $primary;
+      color: $primary;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.active {
+      background-color: $primary;
+      border-color: $primary;
+      color: white;
+      font-weight: 600;
+    }
+
+    &.previous-page,
+    &.next-page {
+      padding: 0 $space-3;
+      font-weight: 600;
+      min-width: auto; // Allow width to adjust to content
+    }
+  }
+
+  // Hide some page numbers on very small screens
+  @media (max-width: 360px) {
+    .page-numbers {
+      display: none;
+
+      &:nth-child(-n + 2),
+      &:nth-last-child(-n + 2),
+      &.active {
+        display: flex;
+      }
+    }
+  }
+
+  @media (min-width: $breakpoint-sm) {
+    gap: $space-2;
+    flex-wrap: nowrap;
+    padding: 0;
+
+    button {
+      min-width: 2.5rem;
+      height: 2.5rem;
+      font-size: $text-sm;
+      padding: 0 $space-3;
+    }
+  }
+}
