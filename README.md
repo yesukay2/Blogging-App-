@@ -2,6 +2,12 @@
 
 A modern and responsive blogging application built with Angular. This app allows users to **view**, **create**, **edit**, and **delete** blog posts with a seamless UI and efficient in-memory data handling. It uses the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API for mock data and implements client-side caching for performance and offline capabilities.
 
+NB: Login with the following credentials:
+
+username: admin
+password: admin
+
+
 ---
 
 ## 🌟 Features
@@ -53,8 +59,8 @@ src/
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/blogger-app.git
-cd blogger-app
+git clone https://github.com/yesukay2/Blogging-App-/
+cd Blogging-App-
 ```
 
 2. **Install dependencies**
