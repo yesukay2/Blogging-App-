@@ -1,1 +1,9 @@
-<p>posts-page works!</p>
+<section class="all-posts">
+  <app-post-card *ngFor="let post of posts" [post]="post"></app-post-card>
+  <app-pagination
+    [totalItems]="100"
+    [currentPage]="currentPage"
+    [itemsPerPage]="itemsPerPage"
+    (pageChange)="fetchPosts($event)"
+  ></app-pagination>
+</section>

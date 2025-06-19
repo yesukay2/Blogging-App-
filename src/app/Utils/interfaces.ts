@@ -38,3 +38,7 @@ export interface Comment {
   email: string;
   body: string;
 }
+
+export interface CachedPost extends Post {
+  timestamp: number;
+}

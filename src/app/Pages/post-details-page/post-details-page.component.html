@@ -1,1 +1,11 @@
-<p>post-details-page works!</p>
+<section class="post-details">
+  <button (click)="deletePost(post!.id)">Delete</button>
+  <h2>{{ post?.title }}</h2>
+  <p>{{ post?.body }}</p>
+
+  <h2>Comments</h2>
+  <app-comment-card
+    *ngFor="let comment of comments"
+    [comment]="comment"
+  ></app-comment-card>
+</section>
