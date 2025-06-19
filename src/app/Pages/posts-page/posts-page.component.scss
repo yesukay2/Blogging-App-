@@ -60,6 +60,81 @@
     }
   }
 
+  .new-post-btn-container {
+    @include d-flex(row, flex-end, center);
+  }
+
+  //
+
+  .add-post-button {
+    @include button-style;
+    @include flex-center;
+    background-color: $primary;
+    gap: $space-2;
+    padding: $space-3 $space-5;
+    font-size: $text-base;
+    font-weight: 600;
+    border-radius: $rounded-lg;
+    box-shadow: $shadow-sm;
+    transition: all $transition-speed ease;
+    position: relative;
+    overflow: hidden;
+
+    // Optional icon styling
+    &::before {
+      content: "+";
+      font-size: $text-lg;
+      line-height: 1;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow;
+      background-color: $primary-hover;
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: $shadow-sm;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary, 0.3);
+    }
+
+    // Floating action button style (alternative)
+    &.floating {
+      position: fixed;
+      bottom: $space-6;
+      right: $space-6;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      padding: 0;
+      box-shadow: $shadow-md;
+
+      &::before {
+        font-size: $text-xl;
+      }
+
+      span {
+        display: none;
+      }
+
+      @include responsive(md) {
+        width: auto;
+        height: auto;
+        padding: $space-3 $space-5;
+        border-radius: $rounded-lg;
+
+        span {
+          display: inline;
+        }
+      }
+    }
+  }
+  //
   .no-posts {
     text-align: center;
     padding: $space-8 0;
