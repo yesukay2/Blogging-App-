@@ -1,0 +1,65 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.login-form {
+  @include form-container;
+  max-width: 28rem;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  .form-group {
+    @include form-group;
+
+    label {
+      @include form-label;
+    }
+
+    input {
+      @include form-input;
+      padding: $space-3 $space-4;
+
+      &[type="password"] {
+        letter-spacing: 0.125rem;
+
+        &::placeholder {
+          letter-spacing: normal;
+        }
+      }
+    }
+  }
+
+  .form-actions {
+    margin-top: $space-6;
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+
+    button {
+      @include form-button;
+      order: 1; // Makes login button appear first
+    }
+  }
+}
+
+// Special layout for login page
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: $space-6;
+  background-color: $background;
+
+  @media (min-width: 640px) {
+    padding: $space-8;
+    background-image: linear-gradient(
+      to bottom right,
+      $background,
+      lighten($primary, 40%)
+    );
+  }
+}

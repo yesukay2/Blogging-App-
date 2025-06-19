@@ -1,11 +1,36 @@
 <section class="post-details">
-  <button (click)="deletePost(post!.id)">Delete</button>
-  <h2>{{ post?.title }}</h2>
-  <p>{{ post?.body }}</p>
+  <div class="post-actions">
+    <button (click)="goBack()" title="Back to posts">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"
+        />
+      </svg>
+      Back
+    </button>
+    <button (click)="editPost(post!.id)">Edit</button>
+    <button (click)="deletePost(post!.id)">Delete</button>
+  </div>
 
-  <h2>Comments</h2>
-  <app-comment-card
-    *ngFor="let comment of comments"
-    [comment]="comment"
-  ></app-comment-card>
+  <div class="post-content">
+    <h2>{{ post?.title }}</h2>
+    <p>{{ post?.body }}</p>
+  </div>
+
+  <div class="comments-section">
+    <h2>Comments</h2>
+    <app-comment-card
+      *ngFor="let comment of comments"
+      [comment]="comment"
+    ></app-comment-card>
+  </div>
 </section>

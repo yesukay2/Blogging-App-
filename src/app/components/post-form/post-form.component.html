@@ -1,18 +1,55 @@
 <form class="post-form" [formGroup]="postForm" (ngSubmit)="createPost()">
-  <input formControlName="title" type="text" placeholder="title" />
-  <div class="error-msg" *ngIf="postForm.get('title')?.errors?.['profanity']">
-    Profane words are not allowed
-  </div>
-  <div class="error-msg" *ngIf="postForm.get('title')?.errors?.['specialChar']">
-    Special characters are not allowed
+  <button type="button" class="back-btn" (click)="goBack()">
+    <span class="hand-icon">&#9756;</span> Back
+  </button>
+  <h1 class="form-title">{{ isEditMode ? "Edit Post" : "Create Post" }}</h1>
+  <div class="form-group">
+    <label for="title">Post Title</label>
+    <input
+      id="title"
+      formControlName="title"
+      type="text"
+      placeholder="Enter your post title"
+    />
+    <div class="error-msg" *ngIf="postForm.get('title')?.errors?.['profanity']">
+      Profane words are not allowed
+    </div>
+    <div
+      class="error-msg"
+      *ngIf="postForm.get('title')?.errors?.['specialChar']"
+    >
+      Special characters are not allowed
+    </div>
+    <div class="error-msg" *ngIf="postForm.get('title')?.errors?.['maxlength']">
+      Maximum 500 characters allowed
+    </div>
   </div>
 
-  <input formControlName="body" type="text" placeholder="body" />
-  <div class="error-msg" *ngIf="postForm.get('body')?.errors?.['profanity']">
-    Profane words are not allowed
+  <div class="form-group">
+    <label for="body">Post Content</label>
+    <textarea
+      id="body"
+      formControlName="body"
+      rows="5"
+      placeholder="Write your post content here"
+    ></textarea>
+    <div class="error-msg" *ngIf="postForm.get('body')?.errors?.['profanity']">
+      Profane words are not allowed
+    </div>
+    <div
+      class="error-msg"
+      *ngIf="postForm.get('body')?.errors?.['specialChar']"
+    >
+      Special characters are not allowed
+    </div>
+    <div class="error-msg" *ngIf="postForm.get('body')?.errors?.['maxlength']">
+      Maximum 5000 characters allowed
+    </div>
   </div>
-  <div class="error-msg" *ngIf="postForm.get('body')?.errors?.['specialChar']">
-    Special characters are not allowed
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="postForm.invalid">
+      {{ isEditMode ? "Update Post" : "Publish Post" }}
+    </button>
   </div>
-  <button type="submit">Create Post</button>
 </form>

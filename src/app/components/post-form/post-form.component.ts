@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,8 +11,10 @@ import {
   profaneValidator,
   specialCharValidator,
 } from '../../Utils/custom_validators';
-import { Sanitizer, SecurityContext } from '@angular/core';
+import { SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-form',
@@ -20,24 +22,42 @@ import { CommonModule } from '@angular/common';
   templateUrl: './post-form.component.html',
   styleUrl: './post-form.component.scss',
 })
-export class PostFormComponent {
+export class PostFormComponent implements OnInit {
+  isEditMode = false;
+  paramsId: number | null = null;
+
   constructor(
     private postsService: PostsService,
-    private sanitizer: Sanitizer
+    private route: ActivatedRoute,
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
+
+  ngOnInit(): void {
+    const paramsId = this.route.snapshot.paramMap.get('id');
+
+    if (paramsId) {
+      this.isEditMode = true;
+      this.paramsId = +paramsId;
+      this.postsService.getPost(this.paramsId).subscribe((post) => {
+        this.postForm.get('title')?.setValue(post.title);
+        this.postForm.get('body')?.setValue(post.body);
+      });
+    }
+  }
 
   postForm = new FormGroup({
     title: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
-      Validators.maxLength(50),
+      Validators.maxLength(200),
       profaneValidator(),
       specialCharValidator(),
     ]),
     body: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
-      Validators.maxLength(200),
+      Validators.maxLength(1000),
       profaneValidator(),
       specialCharValidator(),
     ]),
@@ -61,11 +81,35 @@ export class PostFormComponent {
   createPost() {
     if (this.postForm.valid) {
       this.sanitize();
-      this.postsService
-        .createPost(this.postForm.value as Post)
-        .subscribe(() => {
-          this.postForm.reset();
-        });
+      const post: Post = this.postForm.value as Post;
+
+      if (this.isEditMode && this.paramsId) {
+        console.log(this.paramsId);
+        this.postsService
+          .updatePost(
+            {
+              ...post,
+              id: this.paramsId,
+            },
+            this.paramsId
+          )
+          .subscribe(() => {
+            this.postForm.reset();
+            this.router.navigate(['/posts']);
+          });
+        return;
+      } else {
+        this.postsService
+          .createPost(this.postForm.value as Post)
+          .subscribe(() => {
+            this.postForm.reset();
+          });
+      }
     }
+    return;
+  }
+
+  goBack() {
+    this.router.navigate(['/posts']);
   }
 }

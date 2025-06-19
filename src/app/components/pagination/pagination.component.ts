@@ -31,4 +31,37 @@ export class PaginationComponent {
     }
     return pages;
   }
+
+  getVisiblePages(): (number | string)[] {
+    const visiblePages: (number | string)[] = [];
+    const maxVisible = 5; // Adjust based on your needs
+
+    if (this.totalPages <= maxVisible) {
+      return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    }
+
+    // Always show first page
+    visiblePages.push(1);
+
+    // Show current page and neighbors
+    const start = Math.max(2, this.currentPage - 1);
+    const end = Math.min(this.totalPages - 1, this.currentPage + 1);
+
+    if (start > 2) {
+      visiblePages.push('...');
+    }
+
+    for (let i = start; i <= end; i++) {
+      visiblePages.push(i);
+    }
+
+    if (end < this.totalPages - 1) {
+      visiblePages.push('...');
+    }
+
+    // Always show last page
+    visiblePages.push(this.totalPages);
+
+    return visiblePages;
+  }
 }

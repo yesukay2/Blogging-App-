@@ -1,0 +1,64 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.post-form {
+  @include form-container;
+
+  & > * + * {
+    margin-top: $space-6;
+  }
+}
+
+.form-title {
+  @include form-title;
+}
+.form-group {
+  @include form-group;
+
+  & label {
+    @include form-label;
+  }
+
+  & input {
+    @include form-input;
+  }
+
+  & textarea {
+    @include form-input;
+  }
+
+  .error-msg {
+    @include form-error;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-4;
+
+  button {
+    @include form-button;
+  }
+}
+
+.hand-icon {
+  cursor: pointer;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+// Layout improvements
+body {
+  background-color: $background;
+  padding: $space-6;
+  width: 100%;
+  min-height: 100vh;
+
+  @media (min-width: 640px) {
+    padding: $space-8;
+    display: flex;
+    align-items: center;
+  }
+}

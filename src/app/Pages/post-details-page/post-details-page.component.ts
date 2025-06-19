@@ -3,7 +3,7 @@ import { PostsService } from '../../Services/posts.service';
 import { Comment, Post } from '../../Utils/interfaces';
 import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -21,6 +21,7 @@ export class PostDetailsPageComponent implements OnInit {
   constructor(private postsService: PostsService) {}
 
   route: ActivatedRoute = inject(ActivatedRoute);
+  router: Router = inject(Router);
 
   ngOnInit() {
     this.paramId = this.route.snapshot.paramMap.get('id')?.toString();
@@ -38,5 +39,13 @@ export class PostDetailsPageComponent implements OnInit {
     this.postsService.deletePost(id).subscribe(() => {
       this.post = undefined;
     });
+  }
+
+  editPost(id: number) {
+    this.router.navigate(['posts/edit-post', id]);
+  }
+
+  goBack() {
+    this.router.navigate(['posts']);
   }
 }
