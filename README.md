@@ -1,59 +1,95 @@
-# BloggerApp
+# Blogger-App 📝
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.14.
+A modern and responsive blogging application built with Angular. This app allows users to **view**, **create**, **edit**, and **delete** blog posts with a seamless UI and efficient in-memory data handling. It uses the [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API for mock data and implements client-side caching for performance and offline capabilities.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🌟 Features
 
-```bash
-ng serve
+- 🔍 View paginated list of blog posts
+- ➕ Create new posts (with form validation)
+- 🖊️ Edit existing posts
+- ❌ Delete posts
+- 🧠 Smart caching with `BehaviorSubject` and `Map`
+- 🔁 Retry and error handling using RxJS
+- 🌐 Environment-specific configuration (dev, prod, staging)
+- 💅 Fully styled with SCSS and Angular Material components
+- 📱 Mobile responsive and user-friendly layout
+
+---
+
+## 🛠 Project Structure
+
+```
+src/
+│
+├── app/
+│   ├── components/           # Reusable UI components (post-card, pagination, navbar, etc.)
+│   ├── pages/                # Page-level components (post list, single post, create/edit post)
+│   ├── services/             # Business logic and HTTP interactions (posts.service.ts, error-handler.service.ts)
+│   ├── utils/                # Interfaces and custom validators
+│   ├── environments/         # Environment files for dev, prod, staging
+│   └── app.module.ts         # Root Angular module
+│
+├── styles/                  # Global SCSS styles, variables, mixins
+│   ├── _variables.scss
+│   ├── _mixins.scss
+│   └── styles.scss
+│
+└── assets/                  # Static assets (images, icons, fonts, etc.)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🚀 Getting Started
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Prerequisites
 
-```bash
-ng generate component component-name
-```
+- Node.js >= 18
+- Angular CLI >= 17
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Installation
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+1. **Clone the repository**
 
 ```bash
-ng build
+git clone https://github.com/your-username/blogger-app.git
+cd blogger-app
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+2. **Install dependencies**
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+3. **Run the development server**
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+This will start the app at `http://localhost:4200/`.
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 📦 NPM Scripts
+
+| Command              | Purpose                                        |
+| -------------------- | ---------------------------------------------- |
+| `npm start`          | Runs the app in development mode (`ng serve`)  |
+| `npm run build`      | Compiles the app for production (`ng build`)   |
+| `npm run lint`       | Runs ESLint on the project                     |
+| `npm run test`       | Runs unit tests with Karma                     |
+| `npm run staging`    | Builds the app with staging environment config |
+| `npm run build:prod` | Builds the app for production                  |
+
+---
+
+## 🧠 Caching Strategy
+
+- Posts are **initially fetched** from the API and cached using `Map` by page keys (`page-limit`).
+- New or edited posts update the cached `Map` and the `BehaviorSubject` without refetching from the API.
+- Data is stored in-memory and automatically refreshed every 5 minutes (cache expiry logic).
+
+---
