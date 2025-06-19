@@ -217,6 +217,8 @@ export class PostsService {
         data: updatedPage,
         timestamp: Date.now(),
       });
+      console.log('deleted', id);
+      console.log('updatedPage', updatedPage);
 
       if (
         JSON.stringify(this.posts$.getValue()) === JSON.stringify(value.data)

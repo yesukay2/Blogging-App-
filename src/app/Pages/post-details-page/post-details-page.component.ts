@@ -36,9 +36,7 @@ export class PostDetailsPageComponent implements OnInit {
   }
 
   deletePost(id: number) {
-    this.postsService.deletePost(id).subscribe(() => {
-      this.post = undefined;
-    });
+    this.router.navigate([`posts/${id}/delete-post`]);
   }
 
   editPost(id: number) {
