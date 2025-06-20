@@ -36,6 +36,9 @@ export class LoginComponent {
     } else {
       this.snackBar.open('Invalid username or password', 'Close', {
         duration: 3000,
+        panelClass: ['error-snackbar'],
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
       });
     }
   }

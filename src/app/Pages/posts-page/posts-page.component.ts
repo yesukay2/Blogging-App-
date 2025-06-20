@@ -5,7 +5,6 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
 import { CommonModule } from '@angular/common';
 import { ErrorHandlerService } from '../../Services/error-handler.service';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -26,8 +25,7 @@ export class PostsPageComponent implements OnInit, OnDestroy {
   constructor(
     private postsService: PostsService,
     private errorHandler: ErrorHandlerService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private router: Router
   ) {
     this.fetchPosts(this.currentPage);
   }

@@ -92,7 +92,6 @@ export class PostFormComponent implements OnInit, OnDestroy {
       const post: Post = this.postForm.value as Post;
 
       if (this.isEditMode && this.paramsId) {
-        console.log(this.paramsId);
         const subscription = this.postsService
           .updatePost(
             {
@@ -104,6 +103,9 @@ export class PostFormComponent implements OnInit, OnDestroy {
           .subscribe(() => {
             this.snackbar.open('Post editted successfully.', 'dismiss', {
               duration: 3000,
+              panelClass: ['success-snackbar'],
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
             });
             this.postForm.reset();
             this.router.navigate(['/posts']);
@@ -116,6 +118,9 @@ export class PostFormComponent implements OnInit, OnDestroy {
           .subscribe(() => {
             this.snackbar.open('Post created successfully.', 'dismiss', {
               duration: 3000,
+              panelClass: ['success-snackbar'],
+              verticalPosition: 'top',
+              horizontalPosition: 'center',
             });
             this.postForm.reset();
             this.router.navigate(['/posts']);

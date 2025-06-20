@@ -20,6 +20,9 @@ export class ErrorHandlerService {
 
     this.snackBar.open(errorMessage, 'Dismiss', {
       duration: 4000,
+      panelClass: ['error-snackbar'],
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
     });
     return throwError(() => new Error(errorMessage));
   }
