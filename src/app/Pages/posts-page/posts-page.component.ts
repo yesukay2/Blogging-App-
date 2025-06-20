@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PostsService } from '../../Services/posts.service';
 import { Post } from '../../Utils/interfaces';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
@@ -7,6 +7,7 @@ import { ErrorHandlerService } from '../../Services/error-handler.service';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-posts-page',
@@ -14,11 +15,13 @@ import { Router } from '@angular/router';
   templateUrl: './posts-page.component.html',
   styleUrl: './posts-page.component.scss',
 })
-export class PostsPageComponent implements OnInit {
+export class PostsPageComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 100;
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private postsService: PostsService,
@@ -30,7 +33,7 @@ export class PostsPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.postsService.posts.subscribe({
+    this.subscriptions[0] = this.postsService.posts.subscribe({
       next: (posts) => (this.posts = posts),
     });
     this.fetchPosts(this.currentPage);
@@ -38,12 +41,18 @@ export class PostsPageComponent implements OnInit {
 
   fetchPosts(page: number) {
     this.currentPage = page;
-    this.postsService.getPaginatedPosts(page, this.itemsPerPage).subscribe({
-      error: (error) => this.errorHandler.handleError(error),
-    });
+    this.subscriptions[1] = this.postsService
+      .getPaginatedPosts(page, this.itemsPerPage)
+      .subscribe({
+        error: (error) => this.errorHandler.handleError(error),
+      });
   }
 
   addPost() {
     this.router.navigate(['posts/new-post']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

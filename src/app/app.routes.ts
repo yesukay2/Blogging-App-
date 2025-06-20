@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { LoginPageComponent } from './Pages/login-page/login-page.component';
-import { RegisterPageComponent } from './Pages/register-page/register-page.component';
 import { PostsPageComponent } from './Pages/posts-page/posts-page.component';
 import { PostDetailsPageComponent } from './Pages/post-details-page/post-details-page.component';
 import { NewPostPageComponent } from './Pages/new-post-page/new-post-page.component';
@@ -22,5 +21,4 @@ export const routes: Routes = [
     component: NewPostPageComponent,
     canActivate: [authGuard],
   },
-  { path: 'register', component: RegisterPageComponent },
 ];

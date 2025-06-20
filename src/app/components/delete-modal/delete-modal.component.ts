@@ -1,9 +1,10 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, Output } from '@angular/core';
+import { Component, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PostsService } from '../../Services/posts.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandlerService } from '../../Services/error-handler.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-delete-modal',
@@ -11,7 +12,8 @@ import { ErrorHandlerService } from '../../Services/error-handler.service';
   templateUrl: './delete-modal.component.html',
   styleUrl: './delete-modal.component.scss',
 })
-export class DeleteModalComponent {
+export class DeleteModalComponent implements OnDestroy {
+  subscription: Subscription = new Subscription();
   constructor(
     private location: Location,
     private route: ActivatedRoute,
@@ -26,14 +28,20 @@ export class DeleteModalComponent {
 
   deletePost() {
     const postId = this.route.snapshot.paramMap.get('id');
-    this.postsService.deletePost(parseInt(postId!)).subscribe({
-      next: () => {
-        this.snackBar.open('Post deleted successfully', 'Close');
-      },
-      error: (error) => {
-        this.errorHandler.handleError(error);
-      },
-    });
+    this.subscription = this.postsService
+      .deletePost(parseInt(postId!))
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Post deleted successfully', 'Close');
+        },
+        error: (error) => {
+          this.errorHandler.handleError(error);
+        },
+      });
     this.close();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -16,6 +16,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-form',
@@ -23,9 +24,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './post-form.component.html',
   styleUrl: './post-form.component.scss',
 })
-export class PostFormComponent implements OnInit {
+export class PostFormComponent implements OnInit, OnDestroy {
   isEditMode = false;
   paramsId: number | null = null;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private postsService: PostsService,
@@ -41,10 +44,13 @@ export class PostFormComponent implements OnInit {
     if (paramsId) {
       this.isEditMode = true;
       this.paramsId = +paramsId;
-      this.postsService.getPost(this.paramsId).subscribe((post) => {
-        this.postForm.get('title')?.setValue(post.title);
-        this.postForm.get('body')?.setValue(post.body);
-      });
+      const subscription = this.postsService
+        .getPost(this.paramsId)
+        .subscribe((post) => {
+          this.postForm.get('title')?.setValue(post.title);
+          this.postForm.get('body')?.setValue(post.body);
+        });
+      this.subscriptions.push(subscription);
     }
   }
 
@@ -87,7 +93,7 @@ export class PostFormComponent implements OnInit {
 
       if (this.isEditMode && this.paramsId) {
         console.log(this.paramsId);
-        this.postsService
+        const subscription = this.postsService
           .updatePost(
             {
               ...post,
@@ -102,9 +108,10 @@ export class PostFormComponent implements OnInit {
             this.postForm.reset();
             this.router.navigate(['/posts']);
           });
+        this.subscriptions.push(subscription);
         return;
       } else {
-        this.postsService
+        const subscription = this.postsService
           .createPost(this.postForm.value as Post)
           .subscribe(() => {
             this.snackbar.open('Post created successfully.', 'dismiss', {
@@ -113,6 +120,7 @@ export class PostFormComponent implements OnInit {
             this.postForm.reset();
             this.router.navigate(['/posts']);
           });
+        this.subscriptions.push(subscription);
       }
     }
     return;
@@ -120,5 +128,9 @@ export class PostFormComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/posts']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

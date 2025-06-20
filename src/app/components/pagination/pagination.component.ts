@@ -34,7 +34,7 @@ export class PaginationComponent {
 
   getVisiblePages(): (number | string)[] {
     const visiblePages: (number | string)[] = [];
-    const maxVisible = 5; // Adjust based on your needs
+    const maxVisible = 5;
 
     if (this.totalPages <= maxVisible) {
       return Array.from({ length: this.totalPages }, (_, i) => i + 1);
