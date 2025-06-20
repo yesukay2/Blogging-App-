@@ -32,7 +32,12 @@ export class DeleteModalComponent implements OnDestroy {
       .deletePost(parseInt(postId!))
       .subscribe({
         next: () => {
-          this.snackBar.open('Post deleted successfully', 'Close');
+          this.snackBar.open('Post deleted successfully', 'Close', {
+            duration: 3000,
+            panelClass: ['success-snackbar'],
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+          });
         },
         error: (error) => {
           this.errorHandler.handleError(error);
