@@ -133,6 +133,12 @@
         }
       }
     }
+
+    @media screen and (max-width: 768px) {
+      width: 4.1rem;
+      padding: $space-2 $space-4;
+      font-size: 0.7rem;
+    }
   }
   //
   .no-posts {
