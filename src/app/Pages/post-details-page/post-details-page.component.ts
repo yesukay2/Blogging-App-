@@ -19,7 +19,7 @@ export class PostDetailsPageComponent implements OnInit {
   @Input() comments?: Comment[];
   private paramId?: string;
 
-  subscription!: Subscription[];
+  subscription: Subscription[] = [];
 
   constructor(private postsService: PostsService) {}
 
