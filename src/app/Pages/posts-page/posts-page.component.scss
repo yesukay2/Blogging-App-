@@ -8,14 +8,14 @@
 
   .posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: $space-5;
     margin-bottom: 10rem;
     width: 100%;
 
     // Responsive adjustments
     @include responsive(sm) {
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     }
 
     @include responsive(md) {
@@ -23,11 +23,11 @@
     }
 
     @include responsive(lg) {
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
 
     @include responsive(xl) {
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     }
   }
 
