@@ -15,6 +15,7 @@ import { SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-post-form',
@@ -30,7 +31,8 @@ export class PostFormComponent implements OnInit {
     private postsService: PostsService,
     private route: ActivatedRoute,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -94,6 +96,9 @@ export class PostFormComponent implements OnInit {
             this.paramsId
           )
           .subscribe(() => {
+            this.snackbar.open('Post editted successfully.', 'dismiss', {
+              duration: 3000,
+            });
             this.postForm.reset();
             this.router.navigate(['/posts']);
           });
@@ -102,7 +107,11 @@ export class PostFormComponent implements OnInit {
         this.postsService
           .createPost(this.postForm.value as Post)
           .subscribe(() => {
+            this.snackbar.open('Post created successfully.', 'dismiss', {
+              duration: 3000,
+            });
             this.postForm.reset();
+            this.router.navigate(['/posts']);
           });
       }
     }
