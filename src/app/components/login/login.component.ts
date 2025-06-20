@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,11 @@ import {
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -29,7 +34,9 @@ export class LoginComponent {
     if (isLoggedIn) {
       this.router.navigate(['/posts']);
     } else {
-      alert('Invalid username or password');
+      this.snackBar.open('Invalid username or password', 'Close', {
+        duration: 3000,
+      });
     }
   }
 }

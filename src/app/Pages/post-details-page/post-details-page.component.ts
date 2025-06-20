@@ -6,6 +6,7 @@ import { CommentCardComponent } from '../../components/comment-card/comment-card
 import { ActivatedRoute, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-details-page',
@@ -18,6 +19,8 @@ export class PostDetailsPageComponent implements OnInit {
   @Input() comments?: Comment[];
   private paramId?: string;
 
+  subscription!: Subscription[];
+
   constructor(private postsService: PostsService) {}
 
   route: ActivatedRoute = inject(ActivatedRoute);
@@ -26,12 +29,16 @@ export class PostDetailsPageComponent implements OnInit {
   ngOnInit() {
     this.paramId = this.route.snapshot.paramMap.get('id')?.toString();
     if (this.paramId) {
-      this.postsService.getPost(parseInt(this.paramId)).subscribe((post) => {
-        this.post = post;
-      });
-      this.postsService
+      const postSubscription = this.postsService
+        .getPost(parseInt(this.paramId))
+        .subscribe((post) => {
+          this.post = post;
+        });
+      this.subscription.push(postSubscription);
+      const commentsSubscription = this.postsService
         .getPostComments(parseInt(this.paramId))
         .subscribe((comments) => (this.comments = comments));
+      this.subscription.push(commentsSubscription);
     }
   }
 
@@ -45,5 +52,9 @@ export class PostDetailsPageComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['posts']);
+  }
+
+  ngOnDestroy() {
+    this.subscription.forEach((subscription) => subscription.unsubscribe());
   }
 }
